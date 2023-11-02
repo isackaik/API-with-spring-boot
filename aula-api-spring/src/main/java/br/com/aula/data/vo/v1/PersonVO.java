@@ -1,14 +1,19 @@
 package br.com.aula.data.vo.v1;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.github.dozermapper.core.Mapping;
+import org.springframework.hateoas.RepresentationModel;
+
 import java.io.Serializable;
 import java.util.Objects;
 
-
-public class PersonVO implements Serializable {
-
-    private static final long serialVersionUDI = 1L;
-
-    private Long id;
+@JsonPropertyOrder({"id", "firstname", "lastName", "address", "gender"})
+public class PersonVO extends RepresentationModel<PersonVO> implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Mapping("id")
+    @JsonProperty("id")
+    private Long key;
     private String firstname;
     private String lastName;
     private String address;
@@ -16,12 +21,12 @@ public class PersonVO implements Serializable {
 
     public PersonVO() {}
 
-    public Long getId() {
-        return id;
+    public Long getKey() {
+        return key;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setKey(Long key) {
+        this.key = key;
     }
 
     public String getFirstname() {
@@ -61,12 +66,12 @@ public class PersonVO implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PersonVO person = (PersonVO) o;
-        return Objects.equals(id, person.id) && Objects.equals(firstname, person.firstname) && Objects.equals(lastName, person.lastName) && Objects.equals(address, person.address) && Objects.equals(gender, person.gender);
+        return Objects.equals(key, person.key) && Objects.equals(firstname, person.firstname) && Objects.equals(lastName, person.lastName) && Objects.equals(address, person.address) && Objects.equals(gender, person.gender);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstname, lastName, address, gender);
+        return Objects.hash(key, firstname, lastName, address, gender);
     }
 
 }
