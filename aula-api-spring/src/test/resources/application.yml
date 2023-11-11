@@ -1,12 +1,11 @@
+server:
+  port: 8888
 cors:
   originPatterns: http://localhost:3000,http://localhost:8080,https://erudio.com.br
 spring:
   datasource:
     dbcp2:
       driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/api_spring?useTimezone=true&serverTimezone=UTC
-    username: postgres
-    password: postgres
   jpa:
     hibernate.ddl-auto: none
     properties:

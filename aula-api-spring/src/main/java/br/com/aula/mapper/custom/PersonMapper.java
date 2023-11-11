@@ -4,8 +4,6 @@ import br.com.aula.data.vo.v1.PersonVO;
 import br.com.aula.models.Person;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-
 @Service
 public class PersonMapper {
 
@@ -26,7 +24,6 @@ public class PersonMapper {
         entity.setLastName(person.getLastName());
         entity.setAddress(person.getAddress());
         entity.setGender(person.getGender());
-        //vo.setBirthDay(new Date());
         return entity;
     }
 
