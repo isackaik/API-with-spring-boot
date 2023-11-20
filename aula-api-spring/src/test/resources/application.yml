@@ -2,6 +2,11 @@ server:
   port: 8888
 cors:
   originPatterns: http://localhost:3000,http://localhost:8080,https://erudio.com.br
+security:
+  jwt:
+    token:
+      secret-key: 53ccr37
+      expire-length: 3600000
 spring:
   datasource:
     dbcp2:
@@ -12,7 +17,9 @@ spring:
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
 springdoc:
-  pathsToMach: /api/**/
+  pathsToMach:
+    - /auth/**/
+    - /api/**/
   swagger-ui:
     use-root-path: true
 
