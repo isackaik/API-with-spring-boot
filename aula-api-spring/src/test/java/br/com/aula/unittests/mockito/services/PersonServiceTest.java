@@ -55,7 +55,7 @@ class PersonServiceTest {
         assertNotNull(personOne.getLinks());
         assertTrue(personOne.toString().contains("links: [</api/person/1>;rel=\"self\"]"));
         assertEquals("Endereço Teste 1", personOne.getAddress());
-        assertEquals("First Name 1", personOne.getFirstname());
+        assertEquals("First Name 1", personOne.getFirstName());
         assertEquals("Last Name 1", personOne.getLastName());
         assertEquals("Female", personOne.getGender());
 
@@ -66,7 +66,7 @@ class PersonServiceTest {
         assertNotNull(personFour.getLinks());
         assertTrue(personFour.toString().contains("links: [</api/person/4>;rel=\"self\"]"));
         assertEquals("Endereço Teste 4", personFour.getAddress());
-        assertEquals("First Name 4", personFour.getFirstname());
+        assertEquals("First Name 4", personFour.getFirstName());
         assertEquals("Last Name 4", personFour.getLastName());
         assertEquals("Male", personFour.getGender());
 
@@ -77,7 +77,7 @@ class PersonServiceTest {
         assertNotNull(personNine.getLinks());
         assertTrue(personNine.toString().contains("links: [</api/person/9>;rel=\"self\"]"));
         assertEquals("Endereço Teste 9", personNine.getAddress());
-        assertEquals("First Name 9", personNine.getFirstname());
+        assertEquals("First Name 9", personNine.getFirstName());
         assertEquals("Last Name 9", personNine.getLastName());
         assertEquals("Female", personNine.getGender());
     }
@@ -95,7 +95,7 @@ class PersonServiceTest {
         assertNotNull(result.getLinks());
         assertTrue(result.toString().contains("links: [</api/person/1>;rel=\"self\"]"));
         assertEquals("Endereço Teste 1", result.getAddress());
-        assertEquals("First Name 1", result.getFirstname());
+        assertEquals("First Name 1", result.getFirstName());
         assertEquals("Last Name 1", result.getLastName());
         assertEquals("Female", result.getGender());
     }
@@ -106,7 +106,6 @@ class PersonServiceTest {
         Person persisted = entity;
         persisted.setId(1L);
         PersonVO vo = input.mockVO(1);
-        vo.setKey(1L);
 
         when(repository.save(entity)).thenReturn(persisted);
         var result = service.create(vo);
@@ -116,7 +115,7 @@ class PersonServiceTest {
         assertNotNull(result.getLinks());
         assertTrue(result.toString().contains("links: [</api/person/1>;rel=\"self\"]"));
         assertEquals("Endereço Teste 1", result.getAddress());
-        assertEquals("First Name 1", result.getFirstname());
+        assertEquals("First Name 1", result.getFirstName());
         assertEquals("Last Name 1", result.getLastName());
         assertEquals("Female", result.getGender());
     }
@@ -138,7 +137,7 @@ class PersonServiceTest {
         assertNotNull(result.getLinks());
         assertTrue(result.toString().contains("links: [</api/person/1>;rel=\"self\"]"));
         assertEquals("Endereço Teste 1", result.getAddress());
-        assertEquals("First Name 1", result.getFirstname());
+        assertEquals("First Name 1", result.getFirstName());
         assertEquals("Last Name 1", result.getLastName());
         assertEquals("Female", result.getGender());
     }

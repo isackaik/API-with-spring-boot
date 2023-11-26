@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -58,12 +59,23 @@ public class PersonService {
         logger.info("Updating one person!");
         var entity = repository.findById(person.getKey()).orElseThrow(() ->
                             new ResourceNotFoundException("Nenhum registro encontrado para este ID."));
-        entity.setFirstname(person.getFirstname());
+        entity.setFirstName(person.getFirstName());
         entity.setLastName(person.getLastName());
         entity.setAddress(person.getAddress());
         entity.setGender(person.getGender());
         var vo = DozerMapper.parseObject(repository.save(entity), PersonVO.class);
         vo.add(linkTo(methodOn(PersonController.class).findById(vo.getKey())).withSelfRel());
+        return vo;
+    }
+
+    @Transactional
+    public PersonVO disablePerson(Long id){
+        logger.info("Disabling one people!");
+        repository.disablePerson(id);
+
+        var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Nenhum registro encontrado para este ID."));
+        var vo = DozerMapper.parseObject(entity, PersonVO.class);
+        vo.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
         return vo;
     }
 

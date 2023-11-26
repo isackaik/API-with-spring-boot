@@ -47,7 +47,8 @@ public class AuthControllerYmlTest extends AbstractIntegrationTest {
 
         tokenVO = given().spec(specification)
                 .config(RestAssuredConfig.config()
-                .encoderConfig(EncoderConfig.encoderConfig().encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
+                .encoderConfig(EncoderConfig.encoderConfig()
+                .encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
                 .accept(TestConfigs.CONTENT_TYPE_YML)
                 .basePath("/auth/signin").port(TestConfigs.SERVER_PORT)
                 .contentType(TestConfigs.CONTENT_TYPE_YML).body(user, objectMapper)

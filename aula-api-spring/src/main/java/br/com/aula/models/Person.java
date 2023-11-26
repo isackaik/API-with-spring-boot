@@ -15,13 +15,16 @@ public class Person implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "first_name", nullable = false, length = 80)
-    private String firstname;
+    private String firstName;
     @Column(name = "last_name", nullable = false, length = 100)
     private String lastName;
     @Column(nullable = false, length = 150)
     private String address;
     @Column(nullable = false, length = 6)
     private String gender;
+
+    @Column(nullable = false)
+    private Boolean enabled;
 
     public Person() {}
 
@@ -33,12 +36,12 @@ public class Person implements Serializable {
         this.id = id;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {
@@ -65,17 +68,24 @@ public class Person implements Serializable {
         this.gender = gender;
     }
 
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        return Objects.equals(id, person.id) && Objects.equals(firstname, person.firstname) && Objects.equals(lastName, person.lastName) && Objects.equals(address, person.address) && Objects.equals(gender, person.gender);
+        return Objects.equals(id, person.id) && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(address, person.address) && Objects.equals(gender, person.gender) && Objects.equals(enabled, person.enabled);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstname, lastName, address, gender);
+        return Objects.hash(id, firstName, lastName, address, gender, enabled);
     }
-
 }

@@ -1,36 +1,32 @@
-package br.com.aula.data.vo.v1;
+package br.com.aula.integrationtestes.vo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.github.dozermapper.core.Mapping;
-import jakarta.persistence.*;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-@JsonPropertyOrder({"id", "author", "launchDate", "price", "title"})
-public class BookVO extends RepresentationModel<PersonVO> implements Serializable {
+@XmlRootElement
+public class BookVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Mapping("id")
-    @JsonProperty("id")
-    private Long key;
+
+    private Long id;
     private String author;
     private Date launchDate;
     private Double price;
     private String title;
 
-    public BookVO(){
+    public BookVO() {
     }
 
-    public Long getKey() {
-        return key;
+    public Long getId() {
+        return id;
     }
 
-    public void setKey(Long key) {
-        this.key = key;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getAuthor() {
@@ -71,11 +67,11 @@ public class BookVO extends RepresentationModel<PersonVO> implements Serializabl
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         BookVO bookVO = (BookVO) o;
-        return Objects.equals(key, bookVO.key) && Objects.equals(author, bookVO.author) && Objects.equals(launchDate, bookVO.launchDate) && Objects.equals(price, bookVO.price) && Objects.equals(title, bookVO.title);
+        return Objects.equals(id, bookVO.id) && Objects.equals(author, bookVO.author) && Objects.equals(launchDate, bookVO.launchDate) && Objects.equals(price, bookVO.price) && Objects.equals(title, bookVO.title);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), key, author, launchDate, price, title);
+        return Objects.hash(super.hashCode(), id, author, launchDate, price, title);
     }
 }
