@@ -80,6 +80,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
         assertNotNull(persistedPerson.getLastName());
         assertNotNull(persistedPerson.getAddress());
         assertNotNull(persistedPerson.getGender());
+        assertTrue(persistedPerson.getEnabled());
 
         assertTrue(persistedPerson.getId() > 0);
 
@@ -112,6 +113,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
         assertNotNull(persistedPerson.getLastName());
         assertNotNull(persistedPerson.getAddress());
         assertNotNull(persistedPerson.getGender());
+        assertTrue(persistedPerson.getEnabled());
 
         assertEquals(person.getId(), persistedPerson.getId());
 
@@ -123,6 +125,38 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 
     @Test
     @Order(3)
+    void testDisablePersonByID() throws IOException {
+
+        var content = given().spec(specification)
+                .contentType(TestConfigs.CONTENT_TYPE_JSON)
+                .header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ERUDIO)
+                .pathParam("id", person.getId())
+                .when()
+                .patch("{id}")
+                .then()
+                .statusCode(200)
+                .extract().body().asString();
+        PersonVO persistedPerson = objectMapper.readValue(content, PersonVO.class);
+        person = persistedPerson;
+
+        assertNotNull(persistedPerson);
+        assertNotNull(persistedPerson.getId());
+        assertNotNull(persistedPerson.getFirstName());
+        assertNotNull(persistedPerson.getLastName());
+        assertNotNull(persistedPerson.getAddress());
+        assertNotNull(persistedPerson.getGender());
+        assertFalse(persistedPerson.getEnabled());
+
+        assertEquals(person.getId(), persistedPerson.getId());
+
+        assertEquals("Lucas", persistedPerson.getFirstName());
+        assertEquals("Oliveira Santos", persistedPerson.getLastName());
+        assertEquals("Sergipe", persistedPerson.getAddress());
+        assertEquals("Male", persistedPerson.getGender());
+    }
+
+    @Test
+    @Order(4)
     void testFindByID() throws IOException {
         mockPerson();
 
@@ -144,6 +178,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
         assertNotNull(persistedPerson.getLastName());
         assertNotNull(persistedPerson.getAddress());
         assertNotNull(persistedPerson.getGender());
+        assertFalse(persistedPerson.getEnabled());
 
         assertEquals(person.getId(), persistedPerson.getId());
 
@@ -154,7 +189,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     void testDelete() throws IOException {
 
         given().spec(specification)
@@ -166,15 +201,8 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
            .statusCode(204);
     }
 
-    private void mockPerson() {
-        person.setFirstName("Lucas");
-        person.setLastName("Oliveira");
-        person.setAddress("Sergipe");
-        person.setGender("Male");
-    }
-
     @Test
-    @Order(5)
+    @Order(6)
     void testFindAll() throws IOException {
 
         var content = given().spec(specification)
@@ -195,6 +223,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
         assertNotNull(foundPersonOne.getLastName());
         assertNotNull(foundPersonOne.getAddress());
         assertNotNull(foundPersonOne.getGender());
+        assertTrue(foundPersonOne.getEnabled());
 
         assertEquals(5,foundPersonOne.getId());
 
@@ -211,6 +240,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
         assertNotNull(foundPersonTwo.getLastName());
         assertNotNull(foundPersonTwo.getAddress());
         assertNotNull(foundPersonTwo.getGender());
+        assertTrue(foundPersonTwo.getEnabled());
 
         assertEquals(6,foundPersonTwo.getId());
 
@@ -221,7 +251,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     void testFindAllWithoutToken() throws IOException {
 
         RequestSpecification specificationWithoutToken = new RequestSpecBuilder()
@@ -236,6 +266,14 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
                 .get()
                 .then()
                 .statusCode(403);
+    }
+
+    private void mockPerson() {
+        person.setFirstName("Lucas");
+        person.setLastName("Oliveira");
+        person.setAddress("Sergipe");
+        person.setGender("Male");
+        person.setEnabled(true);
     }
 
 }
