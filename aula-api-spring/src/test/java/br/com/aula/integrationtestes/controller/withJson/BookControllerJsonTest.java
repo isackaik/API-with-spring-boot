@@ -5,6 +5,7 @@ import br.com.aula.integrationtestes.testcontainers.AbstractIntegrationTest;
 import br.com.aula.integrationtestes.vo.AccountCredentialsVO;
 import br.com.aula.integrationtestes.vo.BookVO;
 import br.com.aula.integrationtestes.vo.TokenVO;
+import br.com.aula.integrationtestes.vo.wrappers.WrapperBookVO;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -170,6 +171,7 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 
         var content = given().spec(specification)
                 .contentType(TestConfigs.CONTENT_TYPE_JSON)
+                .queryParams("page", 1, "size", 5, "direction", "asc")
                 .when()
                 .get()
                 .then()
@@ -177,7 +179,9 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
                 .extract().body()
                 .asString();
 
-        List<BookVO> books = objectMapper.readValue(content, new TypeReference<List<BookVO>>() {});
+        WrapperBookVO wrapper = objectMapper.readValue(content, WrapperBookVO.class);
+        var books = wrapper.getEmbedded().getBooks();
+
         BookVO foundBookOne = books.get(0);
         book = foundBookOne;
 
@@ -187,11 +191,11 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
         assertNotNull(foundBookOne.getPrice());
         assertNotNull(foundBookOne.getLaunchDate());
 
-        assertEquals(1,foundBookOne.getId());
+        assertEquals(6,foundBookOne.getId());
 
-        assertEquals("Michael C. Feathers", foundBookOne.getAuthor());
-        assertEquals("Working effectively with legacy code", foundBookOne.getTitle());
-        assertEquals(49.00D, foundBookOne.getPrice());
+        assertEquals("Martin Fowler e Kent Beck", foundBookOne.getAuthor());
+        assertEquals("Refactoring", foundBookOne.getTitle());
+        assertEquals(88.00D, foundBookOne.getPrice());
 
         BookVO foundBookTwo = books.get(1);
         book = foundBookTwo;
@@ -202,11 +206,11 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
         assertNotNull(foundBookTwo.getPrice());
         assertNotNull(foundBookTwo.getLaunchDate());
 
-        assertEquals(2,foundBookTwo.getId());
+        assertEquals(7,foundBookTwo.getId());
 
-        assertEquals("Ralph Johnson, Erich Gamma, John Vlissides e Richard Helm", foundBookTwo.getAuthor());
-        assertEquals("Design Patterns", foundBookTwo.getTitle());
-        assertEquals(45.00D, foundBookTwo.getPrice());
+        assertEquals("Eric Freeman, Elisabeth Freeman, Kathy Sierra, Bert Bates", foundBookTwo.getAuthor());
+        assertEquals("Head First Design Patterns", foundBookTwo.getTitle());
+        assertEquals(110.00D, foundBookTwo.getPrice());
     }
 
     @Test
@@ -225,6 +229,33 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
                 .get()
                 .then()
                 .statusCode(403);
+    }
+
+    @Test
+    @Order(7)
+    void testHATEOAS() throws IOException {
+
+        var content = given().spec(specification)
+                .contentType(TestConfigs.CONTENT_TYPE_JSON)
+                .queryParams("page", 1, "size", 5, "direction", "asc")
+                .when()
+                .get()
+                .then()
+                .statusCode(200)
+                .extract().body()
+                .asString();
+
+        assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost:8888/api/book/6\"}}}"));
+        assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost:8888/api/book/7\"}}}"));
+        assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost:8888/api/book/8\"}}}"));
+
+        assertTrue(content.contains("\"page\":{\"size\":5,\"totalElements\":16,\"totalPages\":4,\"number\":1}}"));
+        assertTrue(content.contains("\"first\":{\"href\":\"http://localhost:8888/api/book?direction=asc&page=0&size=5&sort=id,asc\""));
+        assertTrue(content.contains("\"prev\":{\"href\":\"http://localhost:8888/api/book?direction=asc&page=0&size=5&sort=id,asc\"}"));
+        assertTrue(content.contains("\"self\":{\"href\":\"http://localhost:8888/api/book?page=1&size=5&direction=asc\"}"));
+        assertTrue(content.contains("\"next\":{\"href\":\"http://localhost:8888/api/book?direction=asc&page=2&size=5&sort=id,asc\"}"));
+        assertTrue(content.contains("\"last\":{\"href\":\"http://localhost:8888/api/book?direction=asc&page=3&size=5&sort=id,asc\"}}"));
+
     }
 
     private void mockbook() {

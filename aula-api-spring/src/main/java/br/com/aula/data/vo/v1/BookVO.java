@@ -3,16 +3,17 @@ package br.com.aula.data.vo.v1;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
-import jakarta.persistence.*;
 import org.springframework.hateoas.RepresentationModel;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
 @JsonPropertyOrder({"id", "author", "launchDate", "price", "title"})
-public class BookVO extends RepresentationModel<PersonVO> implements Serializable {
+public class BookVO extends RepresentationModel<BookVO> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
     @Mapping("id")
     @JsonProperty("id")
