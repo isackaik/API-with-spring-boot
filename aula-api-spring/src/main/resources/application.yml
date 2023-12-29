@@ -1,5 +1,7 @@
+server:
+  port: 80
 cors:
-  originPatterns: http://localhost:3000,http://localhost:8080,https://erudio.com.br
+  originPatterns: http://localhost:3000,http://localhost:80,https://erudio.com.br
 file:
   upload-dir: /Users/AGAPESISTEMAS/Documents/Projetos/Arquivos/upload
 security:

@@ -1,0 +1,36 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:16.0
+    restart: always
+    environment:
+      TZ: America/Sao_Paulo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: api_spring
+    ports:
+      - "5432:5432"
+    expose:
+      - 5432
+    networks:
+      - curso-network
+  aula-api-spring:
+    image: isackaik/aula_api_spring
+    restart: always
+    build: ./aula-api-spring
+    working_dir: /aula-api-spring
+    environment:
+      TZ: America/Sao_Paulo
+      SPRING.DATASOURCE.URL: jdbc:postgresql://db:5432/api_spring?useTimezone=true&serverTimezone=UTC
+      SPRING.DATASOURCE.USERNAME: postgres
+      SPRING.DATASOURCE.PASSWORD: postgres
+    ports:
+      - "80:80"
+    command: mvn spring-boot:run
+    depends_on:
+      - db
+    networks:
+      - curso-network
+networks:
+  curso-network:
+    driver: bridge
