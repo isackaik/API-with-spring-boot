@@ -3,7 +3,7 @@ server:
 cors:
   originPatterns: http://localhost:3000,http://localhost:8080,https://erudio.com.br
 file:
-  upload-dir: /home/runner/work/API-with-spring-boot/API-with-spring-boot/upload
+  upload-dir: /home/runner/work/aula-api-spring/upload
 security:
   jwt:
     token:
