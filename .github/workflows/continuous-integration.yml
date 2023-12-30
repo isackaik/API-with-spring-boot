@@ -25,6 +25,7 @@ jobs:
         cache: maven
       
     - name: Build Application JAR
+      working-directory: /aula_api_spring
       run: |
         pwd
         mvn clean package
