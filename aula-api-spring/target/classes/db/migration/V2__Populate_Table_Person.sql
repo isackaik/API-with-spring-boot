@@ -1,0 +1,2 @@
+insert into person (first_name, last_name, gender, address) VALUES ('Pessoa v2', 'Oliveira Santos', 'Female', 'Cidade 1');
+insert into person (first_name, last_name, gender, address) VALUES ('Pessoa v1', 'Oliveira Santos', 'Male', 'Cidade 1');
