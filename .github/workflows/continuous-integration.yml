@@ -25,10 +25,9 @@ jobs:
         cache: maven
       
     - name: Build Application JAR
-      working-directory: /aula_api_spring
       run: |
         pwd
-        mvn clean package
+        mvn clean package --file ./aula_api_spring/pom.xml
 
     - name: Docker Compose Build
       run: docker compose build
