@@ -26,6 +26,7 @@ jobs:
         cache: maven
         
     - name: Build Application JAR
+      working-directory: ./
       run: |
         - pwd
         - mvn clean package
