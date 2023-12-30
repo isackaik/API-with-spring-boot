@@ -24,7 +24,10 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
         cache: maven
-        
+
+    - name: Debug Temp Script
+      run: cat /home/runner/work/_temp/b109c793-42a5-41c2-a329-1ab4aa60b8e7.sh
+      
     - name: Build Application JAR
       working-directory: ./
       run: |
