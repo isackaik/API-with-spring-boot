@@ -38,7 +38,7 @@ public class AuthControllerYmlTest extends AbstractIntegrationTest {
     @Test
     @Order(1)
     void testeSignin() throws IOException {
-        AccountCredentialsVO user = new AccountCredentialsVO("isac", "admin123");
+        AccountCredentialsVO user = new AccountCredentialsVO("isac", "4562513");
 
         RequestSpecification specification = new RequestSpecBuilder()
                 .addFilter(new RequestLoggingFilter(LogDetail.ALL))

@@ -40,7 +40,7 @@ public class PersonControllerCorsJsonTest extends AbstractIntegrationTest {
     @Test
     @Order(0)
     void authorization() throws IOException {
-        AccountCredentialsVO user = new AccountCredentialsVO("isac", "admin123");
+        AccountCredentialsVO user = new AccountCredentialsVO("isac", "4562513");
 
         var accessToken = given()
                 .basePath("/auth/signin").port(TestConfigs.SERVER_PORT)

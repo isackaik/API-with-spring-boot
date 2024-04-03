@@ -24,7 +24,7 @@ public class AuthControllerJsonTest extends AbstractIntegrationTest {
     @Test
     @Order(1)
     void testeSignin() throws IOException {
-        AccountCredentialsVO user = new AccountCredentialsVO("isac", "admin123");
+        AccountCredentialsVO user = new AccountCredentialsVO("isac", "4562513");
 
         tokenVO = given()
                 .basePath("/auth/signin").port(TestConfigs.SERVER_PORT)

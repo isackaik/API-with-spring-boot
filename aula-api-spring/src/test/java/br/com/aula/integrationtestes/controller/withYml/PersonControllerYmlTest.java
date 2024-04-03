@@ -42,7 +42,7 @@ public class PersonControllerYmlTest extends AbstractIntegrationTest {
     @Test
     @Order(0)
     void authorization() throws IOException {
-        AccountCredentialsVO user = new AccountCredentialsVO("isac", "admin123");
+        AccountCredentialsVO user = new AccountCredentialsVO("isac", "4562513");
 
         var accessToken = given()
                 .config(RestAssuredConfig.config()
