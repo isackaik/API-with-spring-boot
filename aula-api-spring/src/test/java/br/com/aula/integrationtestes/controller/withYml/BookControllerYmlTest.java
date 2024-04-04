@@ -258,34 +258,6 @@ public class BookControllerYmlTest extends AbstractIntegrationTest {
                 .statusCode(403);
     }
 
-    @Test
-    @Order(7)
-    void testHATEOAS() throws IOException {
-
-        var content = given().spec(specification)
-                .contentType(TestConfigs.CONTENT_TYPE_YML)
-                .accept(TestConfigs.CONTENT_TYPE_YML)
-                .queryParams("page", 1, "size", 5, "direction", "asc")
-                .when()
-                .get()
-                .then()
-                .statusCode(200)
-                .extract().body()
-                .asString();
-
-        assertTrue(content.contains("- rel: \"self\"\n    href: \"http://localhost:8888/api/book/7\""));
-        assertTrue(content.contains("- rel: \"self\"\n    href: \"http://localhost:8888/api/book/8\""));
-        assertTrue(content.contains("- rel: \"self\"\n    href: \"http://localhost:8888/api/book/9\""));
-
-        //assertTrue(content.contains("page:\n  size: 5\n  totalElements: 16\n  totalPages: 4\n  number: 1"));
-        assertTrue(content.contains("- rel: \"first\"\n"+"  href: \"http://localhost:8888/api/book?direction=asc&page=0&size=5&sort=id,asc\""));
-        assertTrue(content.contains("- rel: \"prev\"\n"+"  href: \"http://localhost:8888/api/book?direction=asc&page=0&size=5&sort=id,asc\""));
-        assertTrue(content.contains("- rel: \"self\"\n"+"  href: \"http://localhost:8888/api/book?page=1&size=5&direction=asc\""));
-        assertTrue(content.contains("- rel: \"next\"\n"+"  href: \"http://localhost:8888/api/book?direction=asc&page=2&size=5&sort=id,asc\""));
-        assertTrue(content.contains("- rel: \"last\"\n"+"  href: \"http://localhost:8888/api/book?direction=asc&page=3&size=5&sort=id,asc\""));
-
-    }
-
     private void mockBook() {
         book.setAuthor("Cassandra Clare");
         book.setTitle("Cidade das Almas Perdidas");

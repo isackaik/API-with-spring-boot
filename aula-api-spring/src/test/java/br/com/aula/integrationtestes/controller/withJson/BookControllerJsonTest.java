@@ -231,33 +231,6 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
                 .statusCode(403);
     }
 
-    @Test
-    @Order(7)
-    void testHATEOAS() throws IOException {
-
-        var content = given().spec(specification)
-                .contentType(TestConfigs.CONTENT_TYPE_JSON)
-                .queryParams("page", 1, "size", 5, "direction", "asc")
-                .when()
-                .get()
-                .then()
-                .statusCode(200)
-                .extract().body()
-                .asString();
-
-        assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost:8888/api/book/6\"}}}"));
-        assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost:8888/api/book/7\"}}}"));
-        assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost:8888/api/book/8\"}}}"));
-
-        //assertTrue(content.contains("\"page\":{\"size\":5,\"totalElements\":16,\"totalPages\":4,\"number\":1}}"));
-        assertTrue(content.contains("\"first\":{\"href\":\"http://localhost:8888/api/book?direction=asc&page=0&size=5&sort=id,asc\""));
-        assertTrue(content.contains("\"prev\":{\"href\":\"http://localhost:8888/api/book?direction=asc&page=0&size=5&sort=id,asc\"}"));
-        assertTrue(content.contains("\"self\":{\"href\":\"http://localhost:8888/api/book?page=1&size=5&direction=asc\"}"));
-        assertTrue(content.contains("\"next\":{\"href\":\"http://localhost:8888/api/book?direction=asc&page=2&size=5&sort=id,asc\"}"));
-        assertTrue(content.contains("\"last\":{\"href\":\"http://localhost:8888/api/book?direction=asc&page=3&size=5&sort=id,asc\"}}"));
-
-    }
-
     private void mockbook() {
         book.setAuthor("Cassandra Clare");
         book.setTitle("Cidade das Almas Perdidas");

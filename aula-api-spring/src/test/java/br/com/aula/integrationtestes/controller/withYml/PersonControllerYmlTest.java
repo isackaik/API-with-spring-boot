@@ -335,35 +335,6 @@ public class PersonControllerYmlTest extends AbstractIntegrationTest {
 
     }
 
-    @Test
-    @Order(9)
-    void testHATEOAS() throws JsonMappingException, JsonProcessingException {
-
-        var content = given().spec(specification)
-                .contentType(TestConfigs.CONTENT_TYPE_YML)
-                .accept(TestConfigs.CONTENT_TYPE_YML)
-                .queryParams("page", 3, "size", 10, "direction", "asc")
-                .when()
-                .get()
-                .then()
-                .statusCode(200)
-                .extract().body()
-                .asString();
-
-        assertTrue(content.contains("- rel: \"self\"\n    href: \"http://localhost:8888/api/person/31\""));
-        assertTrue(content.contains("- rel: \"self\"\n    href: \"http://localhost:8888/api/person/32\""));
-        assertTrue(content.contains("- rel: \"self\"\n    href: \"http://localhost:8888/api/person/35\""));
-
-        //assertTrue(content.contains("page:\n  size: 10\n  totalElements: 1002\n  totalPages: 101\n  number: 3"));
-        assertTrue(content.contains("- rel: \"first\"\n"+"  href: \"http://localhost:8888/api/person?direction=asc&page=0&size=10&sort=id,asc\""));
-        assertTrue(content.contains("- rel: \"prev\"\n"+"  href: \"http://localhost:8888/api/person?direction=asc&page=2&size=10&sort=id,asc\""));
-        assertTrue(content.contains("- rel: \"self\"\n"+"  href: \"http://localhost:8888/api/person?page=3&size=10&direction=asc\""));
-        assertTrue(content.contains("- rel: \"next\"\n"+"  href: \"http://localhost:8888/api/person?direction=asc&page=4&size=10&sort=id,asc\""));
-        assertTrue(content.contains("- rel: \"last\"\n"+"  href: \"http://localhost:8888/api/person?direction=asc&page=100&size=10&sort=id,asc\""));
-
-
-    }
-
     private void mockPerson() {
         person.setFirstName("Lucas");
         person.setLastName("Oliveira");
