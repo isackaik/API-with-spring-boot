@@ -1,0 +1,37 @@
+.new-book-container {
+    width: 30%;
+    min-height: 100vh;
+    margin: 0 auto;
+  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: space-between;
+  
+    background-color: #1C817E;
+    border-radius: 2rem;
+  }
+  
+  .new-book-container .content section.form h1 {
+    margin: 3rem 0 2rem;
+    font-size: 2rem;
+  }
+
+  .new-book-container .content section.form p {
+    font-size: 1.1rem;
+    color: #FFFFFF;
+    line-height: 2rem;
+  }
+  
+  .new-book-container .content section.form img {
+    width: 45%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+
+  .new-book-container .content form input{
+    width: 100%;
+    display: block;
+  }

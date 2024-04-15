@@ -1,0 +1,56 @@
+#username {
+  background-image: url("../../assets/logo_usuario.png");
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size: 1.3em;
+  padding-left: 1.3em;
+}
+
+#password {
+    background-image: url("../../assets/cadeado.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 1.3em;
+    padding-left: 1.3em;
+}
+
+.login-container {
+  width: 30%;
+  height: 100vh;
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  background-color: #1C817E;
+  border-radius: 2rem;
+}
+
+.login-container section.form{
+  width: 100%;
+  max-width: 350px;
+}
+
+.login-container section.form img {
+  width: 45%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.login-container section.form form{
+  margin-top: 100px;
+}
+
+.login-container section.form form h1{
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 32px;
+}
+
+.login-container section.form form input{
+  width: 100%;
+  display: block;
+}
