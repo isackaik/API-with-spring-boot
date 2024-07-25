@@ -1,4 +1,4 @@
-	package br.com.aula.exceptions;
+package br.com.aula.exceptions;
 
 import java.io.Serializable;
 import java.util.Date;
