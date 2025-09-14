@@ -8,10 +8,8 @@ import br.com.aula.mapper.DozerMapper;
 import br.com.aula.mapper.custom.PersonMapper;
 import br.com.aula.models.Person;
 import br.com.aula.repositories.PersonRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
@@ -25,20 +23,25 @@ import java.util.logging.Logger;
 @Service
 public class PersonService {
 
-    @Autowired
-    PersonRepository repository;
-    @Autowired
-    PagedResourcesAssembler<PersonVO> assembler;
-    @Autowired
-    PersonMapper mapper;
+    private PersonRepository repository;
+    private PagedResourcesAssembler<PersonVO> assembler;
     private Logger logger = Logger.getLogger(PersonService.class.getName());
+
+    public PersonService(PersonRepository repository,
+                         PagedResourcesAssembler<PersonVO> assembler){
+        this.repository = repository;
+        this.assembler = assembler;
+    }
 
     public PagedModel<EntityModel<PersonVO>> findAll(Pageable pageable){
         logger.info("Findind one person!");
 
         var personPage = repository.findAll(pageable);
-        var personVOsPage = personPage.map(p -> DozerMapper.parseObject(p, PersonVO.class));
-        personVOsPage.map(p -> p.add(linkTo(methodOn(PersonController.class).findById(p.getKey())).withSelfRel()));
+        var personVOsPage = personPage.map(p -> {
+            var vo = DozerMapper.parseObject(p, PersonVO.class);
+            addHateoasLinks(vo);
+            return vo;
+        });
 
         Link link = linkTo(methodOn(PersonController.class)
                 .findAll(pageable.getPageNumber(),
@@ -66,7 +69,7 @@ public class PersonService {
 
         var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Nenhum registro encontrado para este ID."));
         var vo = DozerMapper.parseObject(entity, PersonVO.class);
-        vo.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
+        addHateoasLinks(vo);
         return vo;
     }
 
@@ -76,7 +79,7 @@ public class PersonService {
         logger.info("Creating one person!");
         var entity = DozerMapper.parseObject(person, Person.class);
         var vo = DozerMapper.parseObject(repository.save(entity), PersonVO.class);
-        vo.add(linkTo(methodOn(PersonController.class).findById(vo.getKey())).withSelfRel());
+        addHateoasLinks(vo);
         return vo;
     }
 
@@ -92,7 +95,7 @@ public class PersonService {
         entity.setGender(person.getGender());
         entity.setEnabled(person.getEnabled());
         var vo = DozerMapper.parseObject(repository.save(entity), PersonVO.class);
-        vo.add(linkTo(methodOn(PersonController.class).findById(vo.getKey())).withSelfRel());
+        addHateoasLinks(vo);
         return vo;
     }
 
@@ -103,7 +106,7 @@ public class PersonService {
 
         var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Nenhum registro encontrado para este ID."));
         var vo = DozerMapper.parseObject(entity, PersonVO.class);
-        vo.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
+        addHateoasLinks(vo);
         return vo;
     }
 
@@ -112,6 +115,15 @@ public class PersonService {
         var entity = repository.findById(id).orElseThrow(() ->
                         new ResourceNotFoundException("Nenhum registro encontrado para este ID."));
         repository.delete(entity);
+    }
+
+    private void addHateoasLinks(PersonVO vo) {
+        vo.add(linkTo(methodOn(PersonController.class).findById(vo.getKey())).withSelfRel().withType("GET"));
+        vo.add(linkTo(methodOn(PersonController.class).findAll(1, 12, "asc")).withRel("findAll").withType("GET"));
+        vo.add(linkTo(methodOn(PersonController.class).create(vo)).withRel("create").withType("POST"));
+        vo.add(linkTo(methodOn(PersonController.class).update(vo)).withRel("update").withType("PUT"));
+        vo.add(linkTo(methodOn(PersonController.class).disablePerson(vo.getKey())).withRel("disable").withType("PATCH"));
+        vo.add(linkTo(methodOn(PersonController.class).delete(vo.getKey())).withRel("delete").withType("DELETE"));
     }
 
 }

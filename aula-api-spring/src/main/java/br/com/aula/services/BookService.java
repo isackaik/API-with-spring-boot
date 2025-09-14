@@ -1,7 +1,9 @@
 package br.com.aula.services;
 
 import br.com.aula.controllers.BookController;
+import br.com.aula.controllers.PersonController;
 import br.com.aula.data.vo.v1.BookVO;
+import br.com.aula.data.vo.v1.PersonVO;
 import br.com.aula.exceptions.RequiredObjectIsNullException;
 import br.com.aula.exceptions.ResourceNotFoundException;
 import br.com.aula.mapper.DozerMapper;
@@ -24,25 +26,31 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Service
 public class BookService {
 
-    @Autowired
-    BookRepository repository;
-    @Autowired
-    PagedResourcesAssembler<BookVO> assembler;
-    @Autowired
-    BookMapper mapper;
+    private BookRepository repository;
+    private PagedResourcesAssembler<BookVO> assembler;
     private Logger logger = Logger.getLogger(BookService.class.getName());
+
+    public BookService(BookRepository repository,
+                        PagedResourcesAssembler<BookVO> assembler){
+        this.repository = repository;
+        this.assembler = assembler;
+    }
 
     public PagedModel<EntityModel<BookVO>> findAll(Pageable pageable){
         logger.info("Findind one book!");
 
         var bookPage = repository.findAll(pageable);
-        var bookVOsPage = bookPage.map(b -> DozerMapper.parseObject(b, BookVO.class));
-        bookVOsPage.map(b -> b.add(linkTo(methodOn(BookController.class).findById(b.getKey())).withSelfRel()));
+        var bookVOsPage = bookPage.map(b -> {
+            var vo = DozerMapper.parseObject(b, BookVO.class);
+            addHateoasLinks(vo);
+            return vo;
+        });
 
         Link link = linkTo(methodOn(BookController.class)
                 .findAll(pageable.getPageNumber(),
                         pageable.getPageSize(),
                         "asc")).withSelfRel();
+
         return assembler.toModel(bookVOsPage, link);
     }
     public BookVO findById(Long id){
@@ -50,7 +58,7 @@ public class BookService {
 
         var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Nenhum registro encontrado para este ID."));
         var vo = DozerMapper.parseObject(entity, BookVO.class);
-        vo.add(linkTo(methodOn(BookController.class).findById(id)).withSelfRel());
+        addHateoasLinks(vo);
         return vo;
     }
 
@@ -60,7 +68,7 @@ public class BookService {
         logger.info("Creating one book!");
         Book entity = DozerMapper.parseObject(book, Book.class);
         var vo = DozerMapper.parseObject(repository.save(entity), BookVO.class);
-        vo.add(linkTo(methodOn(BookController.class).findById(vo.getKey())).withSelfRel());
+        addHateoasLinks(vo);
         return vo;
     }
 
@@ -75,7 +83,7 @@ public class BookService {
         entity.setPrice(book.getPrice());
         entity.setTitle(book.getTitle());
         var vo = DozerMapper.parseObject(repository.save(entity), BookVO.class);
-        vo.add(linkTo(methodOn(BookController.class).findById(vo.getKey())).withSelfRel());
+        addHateoasLinks(vo);
         return vo;
     }
 
@@ -84,6 +92,14 @@ public class BookService {
         var entity = repository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Nenhum registro encontrado para este ID."));
         repository.delete(entity);
+    }
+
+    private void addHateoasLinks(BookVO vo) {
+        vo.add(linkTo(methodOn(BookController.class).findById(vo.getKey())).withSelfRel().withType("GET"));
+        vo.add(linkTo(methodOn(BookController.class).findAll(1, 12, "asc")).withRel("findAll").withType("GET"));
+        vo.add(linkTo(methodOn(BookController.class).create(vo)).withRel("create").withType("POST"));
+        vo.add(linkTo(methodOn(BookController.class).update(vo)).withRel("update").withType("PUT"));
+        vo.add(linkTo(methodOn(BookController.class).delete(vo.getKey())).withRel("delete").withType("DELETE"));
     }
 
 }

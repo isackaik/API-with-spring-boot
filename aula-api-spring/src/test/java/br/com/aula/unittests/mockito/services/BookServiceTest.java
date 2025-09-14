@@ -50,7 +50,7 @@ class BookServiceTest {
         assertNotNull(result);
         assertNotNull(result.getKey());
         assertNotNull(result.getLinks());
-        assertTrue(result.toString().contains("links: [</api/book/1>;rel=\"self\"]"));
+        assertTrue(result.toString().contains("links: [</api/book/1>;rel=\"self\";type=\"GET\""));
         assertEquals("Author 1", result.getAuthor());
         assertNotNull(result.getLaunchDate());
         assertEquals( 1D, result.getPrice());
@@ -70,7 +70,7 @@ class BookServiceTest {
         assertNotNull(result);
         assertNotNull(result.getKey());
         assertNotNull(result.getLinks());
-        assertTrue(result.toString().contains("links: [</api/book/1>;rel=\"self\"]"));
+        assertTrue(result.toString().contains("links: [</api/book/1>;rel=\"self\";type=\"GET\""));
         assertEquals("Author 1", result.getAuthor());
         assertEquals( 1D, result.getPrice());
         assertEquals("Title 1", result.getTitle());
@@ -91,7 +91,7 @@ class BookServiceTest {
         assertNotNull(result);
         assertNotNull(result.getKey());
         assertNotNull(result.getLinks());
-        assertTrue(result.toString().contains("links: [</api/book/1>;rel=\"self\"]"));
+        assertTrue(result.toString().contains("links: [</api/book/1>;rel=\"self\";type=\"GET\""));
         assertEquals("Author 1", result.getAuthor());
         assertNotNull(result.getLaunchDate());
         assertEquals( 1D, result.getPrice());

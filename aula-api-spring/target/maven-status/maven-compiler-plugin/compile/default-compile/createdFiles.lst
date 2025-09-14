@@ -11,6 +11,7 @@ br\com\aula\models\Book.class
 br\com\aula\services\FileStorageService.class
 br\com\aula\data\vo\v1\security\TokenVO.class
 br\com\aula\controllers\AuthController.class
+br\com\aula\config\ObjectMapperConfig.class
 br\com\aula\controllers\FileController.class
 br\com\aula\exceptions\MyFileNotFoundException.class
 br\com\aula\security\Jwt\JwtTokenProvider.class
@@ -26,6 +27,7 @@ br\com\aula\config\OpenAPIConfig.class
 br\com\aula\mapper\custom\BookMapper.class
 br\com\aula\util\MediaType.class
 br\com\aula\config\FileStorageConfig.class
+br\com\aula\serializer\GenderSerializer.class
 br\com\aula\services\PersonService.class
 br\com\aula\data\vo\v1\security\AccountCredentialsVO.class
 br\com\aula\controllers\BookController.class
