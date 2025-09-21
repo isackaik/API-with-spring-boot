@@ -17,6 +17,9 @@
 		<java.version>17</java.version>
 		<rest-assured.version>5.3.0</rest-assured.version>
 		<java-jwt.version>3.1.5</java-jwt.version>
+		<poi-ooxml.version>5.4.1</poi-ooxml.version>
+		<commons-csv.version>1.14.1</commons-csv.version>
+		<commons-io.version>2.18.0</commons-io.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -138,6 +141,24 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+			<version>${commons-csv.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${poi-ooxml.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons-io.version}</version>
+		</dependency>
 
     </dependencies>
 

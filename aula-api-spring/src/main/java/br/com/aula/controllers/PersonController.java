@@ -8,16 +8,20 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import br.com.aula.util.MediaType;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -53,6 +57,48 @@ public class PersonController {
 		return ResponseEntity.ok(personService.findAll(pageable));
 	}
 
+	@GetMapping(value = "/exportPage",
+			produces = {MediaType.APPLICATION_XLSX, MediaType.APPLICATION_CSV})
+	@Operation(summary = "Export people",
+			description = "Export a page of People in XLSX or CSV Format",
+			tags = {"People"},
+			responses = {@ApiResponse(description = "Success", responseCode = "200",
+					content = {
+							@Content(mediaType = MediaType.APPLICATION_XLSX),
+							@Content(mediaType = MediaType.APPLICATION_CSV)
+					}),
+					@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+					@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+					@ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+					@ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+			})
+	public ResponseEntity<Resource> exportPage(
+			@RequestParam(value = "page", defaultValue = "0") Integer page,
+			@RequestParam(value = "size", defaultValue = "10") Integer size,
+			@RequestParam(value = "direction", defaultValue = "asc") String direction,
+			HttpServletRequest request) {
+
+		var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+		Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "id"));
+
+		String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
+
+		Resource resource = personService.exportPage(pageable, acceptHeader);
+
+		var contentType = acceptHeader != null
+				? acceptHeader
+				: "application/octet-stream";
+		var fileExtension = MediaType.APPLICATION_XLSX.equalsIgnoreCase(acceptHeader)
+				? ".xlsx" : ".csv";
+		var filename = "people_exported" + fileExtension;
+
+		return ResponseEntity.ok()
+			.contentType(org.springframework.http.MediaType.parseMediaType(contentType))
+			.header(HttpHeaders.CONTENT_DISPOSITION,
+					"attachment; filename=\"" + filename + "\"")
+			.body(resource);
+	}
+
 	@GetMapping(value = "/findPersonByName/{firstName}",
 				produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML})
 	@Operation(summary = "Finds people by name", description = "Finds people by name", tags = {"People"},
@@ -79,7 +125,6 @@ public class PersonController {
 		return ResponseEntity.ok(personService.findPersonByName(firstName, pageable));
 	}
 
-	@CrossOrigin(origins = "http://localhost:8080")
 	@GetMapping(value = "/{id}",
 				produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML})
 	@Operation(summary = "Finds a person", description = "Finds a person", tags = {"People"},
@@ -97,7 +142,6 @@ public class PersonController {
 	}
 
 
-	@CrossOrigin(origins = {"http://localhost:8080", "https://erudio.com.br"})
 	@PostMapping(produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML},
 				 consumes = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML})
 	@Operation(summary = "Adds a new person",
@@ -111,6 +155,27 @@ public class PersonController {
 	})
 	public PersonVO create(@RequestBody PersonVO person) throws RuntimeException {
 		return personService.create(person);
+	}
+
+	@PostMapping(value = "/massCreation",
+			produces = {
+					MediaType.APPLICATION_JSON,
+					MediaType.APPLICATION_XML,
+					MediaType.APPLICATION_YML})
+	@Operation(summary = "Massive people creation",
+			description = "Massive people creation with upload of XLSX or CSV",
+			tags = {"People"},
+			responses = {@ApiResponse(description = "Success", responseCode = "200",
+					content = {
+							@Content(schema = @Schema(implementation = PersonVO.class))
+					}),
+					@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+					@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+					@ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+					@ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+			})
+	public List<PersonVO> massCreation(@RequestParam("file") MultipartFile file){
+		return personService.massCreation(file);
 	}
 
 	@PutMapping(produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML},
