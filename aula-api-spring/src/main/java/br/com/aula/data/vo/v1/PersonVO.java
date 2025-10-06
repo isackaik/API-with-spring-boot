@@ -73,6 +73,12 @@ public class PersonVO extends RepresentationModel<PersonVO> implements Serializa
         this.enabled = enabled;
     }
 
+    public String getName() {
+        return (this.firstName != null ? firstName : "")
+                + " "
+                + (lastName != null ? lastName : "");
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

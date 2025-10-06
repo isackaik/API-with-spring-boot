@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/person")
@@ -58,14 +59,15 @@ public class PersonController {
 	}
 
 	@GetMapping(value = "/exportPage",
-			produces = {MediaType.APPLICATION_XLSX, MediaType.APPLICATION_CSV})
+			produces = {MediaType.APPLICATION_XLSX, MediaType.APPLICATION_CSV, MediaType.APPLICATION_PDF})
 	@Operation(summary = "Export people",
-			description = "Export a page of People in XLSX or CSV Format",
+			description = "Export a page of People in XLSX or CSV or PDF Format",
 			tags = {"People"},
 			responses = {@ApiResponse(description = "Success", responseCode = "200",
 					content = {
 							@Content(mediaType = MediaType.APPLICATION_XLSX),
-							@Content(mediaType = MediaType.APPLICATION_CSV)
+							@Content(mediaType = MediaType.APPLICATION_CSV),
+							@Content(mediaType = MediaType.APPLICATION_PDF)
 					}),
 					@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
 					@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -85,11 +87,16 @@ public class PersonController {
 
 		Resource resource = personService.exportPage(pageable, acceptHeader);
 
+		Map<String, String> extensionMap = Map.of(
+				MediaType.APPLICATION_XLSX, ".xlsx",
+				MediaType.APPLICATION_CSV, ".csv",
+				MediaType.APPLICATION_PDF, ".pdf"
+		);
+
+		var fileExtension = extensionMap.getOrDefault(acceptHeader, "");
 		var contentType = acceptHeader != null
 				? acceptHeader
 				: "application/octet-stream";
-		var fileExtension = MediaType.APPLICATION_XLSX.equalsIgnoreCase(acceptHeader)
-				? ".xlsx" : ".csv";
 		var filename = "people_exported" + fileExtension;
 
 		return ResponseEntity.ok()

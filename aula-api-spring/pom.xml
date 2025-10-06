@@ -20,6 +20,7 @@
 		<poi-ooxml.version>5.4.1</poi-ooxml.version>
 		<commons-csv.version>1.14.1</commons-csv.version>
 		<commons-io.version>2.18.0</commons-io.version>
+		<jasperreports.version>7.0.1</jasperreports.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -158,6 +159,24 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>${commons-io.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>${jasperreports.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-fonts</artifactId>
+			<version>${jasperreports.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-pdf</artifactId>
+			<version>${jasperreports.version}</version>
 		</dependency>
 
     </dependencies>
